@@ -16,9 +16,9 @@ import open3d as o3d
 
 from pyntcloud import PyntCloud
 
-basedir = '/home/ajay/catkin_ws_rmap/coloradar'
+basedir = '/home/ajay/catkin_ws_rmap/OdomBeyondVision'
 
-bag_file = 'ec_hallways_run0.bag'
+bag_file = '2019-10-24-17-51-58.bag'
 
 radar_bag = rosbag.Bag(os.path.join(basedir,bag_file))
 # Iterate over the lang_full messages
@@ -29,7 +29,12 @@ bagdir = os.path.join(basedir, bag_file.split('.bag')[0])
 if not os.path.exists(bagdir):
     os.makedirs(bagdir)
 
-radar_dir = os.path.join(bagdir, 'radar/RScan_PCD')
+
+radar_dir = os.path.join(bagdir, 'radar')
+if not os.path.exists(radar_dir):
+    os.makedirs(radar_dir)
+
+radar_dir = os.path.join(radar_dir, "RScan_PCD")
 if not os.path.exists(radar_dir):
     os.makedirs(radar_dir)
 
@@ -43,7 +48,7 @@ g_y_min = float('inf')
 g_y_max = float('-inf')
 g_z_min = float('inf')
 g_z_max = float('-inf')
-for topic, msg, time in radar_bag.read_messages(topics=["/mmWaveDataHdl/RScan"]):
+for topic, msg, time in radar_bag.read_messages(topics=["/mmWaveDataHdl/RScan_middle"]):
     # Start a new output file
     pc = [point[0:3] for point in pcd2.read_points(msg, skip_nans=True)]
     pc = np.array(pc)
@@ -65,8 +70,9 @@ for topic, msg, time in radar_bag.read_messages(topics=["/mmWaveDataHdl/RScan"])
         g_z_min = z_min
     if z_max > g_z_max:
         g_z_max = z_max
-    print("Min: ", x_min, y_min, z_min, "Max: ", x_max, y_max, z_max)
+    #print("Min: ", x_min, y_min, z_min, "Max: ", x_max, y_max, z_max)
     #break
+    print(pc.shape,index, msg.header.frame_id)
     ts = msg.header.stamp.to_sec()
     times.append(ts)
     # frame_vals = frame_vals[:-1:2] + 1j * frame_vals[1::2]

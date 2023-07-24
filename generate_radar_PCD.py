@@ -14,8 +14,8 @@ from pyntcloud import PyntCloud
 import pandas as pd 
 
 index = 0
-basedir = '/home/ajay/catkin_ws_rmap/coloradar'
-bag_file = 'ec_hallways_run0.bag'
+basedir = '/home/ajay/catkin_ws_rmap/OdomBeyondVision'
+bag_file = '2019-10-24-17-51-58.bag'
 
 radar_bag = rosbag.Bag(os.path.join(basedir,bag_file))
 # Iterate over the lang_full messages

@@ -11,15 +11,14 @@ import sensor_msgs.point_cloud2 as pcd2
 import matplotlib.pyplot as pyplot
 import matplotlib.pyplot as plt 
 from scipy.spatial import cKDTree
-import pcl
 from pyntcloud import PyntCloud
 import pandas as pd 
 import open3d as o3d
 
 
-basedir = '/home/ajay/catkin_ws_rmap/coloradar'
+basedir = '/home/ajay/catkin_ws_rmap/OdomBeyondVision'
 
-bag_file = 'ec_hallways_run0.bag'
+bag_file = '2019-10-24-17-51-58.bag'
 
 radar_bag = rosbag.Bag(os.path.join(basedir,bag_file))
 # Iterate over the lang_full messages
@@ -81,7 +80,7 @@ def downsample_pointcloud(cloud, leaf_size):
 
 index = 0
 res = []
-for topic, msg, time in radar_bag.read_messages(topics=["/os1_cloud_node/points"]):
+for topic, msg, time in radar_bag.read_messages(topics=["/velodyne_points"]):
     # Start a new output file
     pc = [point[0:4] for point in pcd2.read_points(msg, skip_nans=True)]
     pc = np.array(pc)
@@ -103,7 +102,7 @@ for topic, msg, time in radar_bag.read_messages(topics=["/os1_cloud_node/points"
     del pc
 
     pcd = o3d.io.read_point_cloud(pcd_filename)
-    
+    """
     voxel_size = 0.04
     
     pcd_2x = pcd.voxel_down_sample(voxel_size*2)
@@ -123,8 +122,9 @@ for topic, msg, time in radar_bag.read_messages(topics=["/os1_cloud_node/points"
     pcd_16x = pcd.voxel_down_sample(voxel_size*16)
     pcd_16x_filename = os.path.join(lidar_down16x_dir, file_index+".ply")
     o3d.io.write_point_cloud(pcd_16x_filename, pcd_16x, True, True)
-    
-    print(file_index, np.asarray(pcd_2x.points).shape, np.asarray(pcd_4x.points).shape, np.asarray(pcd_8x.points).shape, np.asarray(pcd_16x.points).shape)
+    """
+    #print(file_index, np.asarray(pcd_2x.points).shape, np.asarray(pcd_4x.points).shape, np.asarray(pcd_8x.points).shape, np.asarray(pcd_16x.points).shape)
+    print(file_index, msg.header.frame_id)
     #data_filename = os.path.join(lidar_dir, str(index)+".npy")
     #with open(data_filename, "wb") as f:
     #   np.save(f, pc)
